@@ -22,6 +22,19 @@ class App extends React.Component {
     });
   };
 
+  removeTask = (taskid) => {
+    return this.setState({
+      tasks: this.state.tasks.filter((task) => task.id !== taskid),
+    });
+  };
+
+  editTask = (taskid, newTaskInfo) => {
+    this.setState({
+      task: (this.state.tasks.find((task) => task.id === taskid).text =
+        newTaskInfo),
+    });
+  };
+
   render() {
     const { task, tasks } = this.state;
     return (
@@ -36,7 +49,7 @@ class App extends React.Component {
           />
           <button type="submit">Add Task</button>
         </form>
-        <Overview tasks={tasks} />
+        <Overview tasks={tasks} deleteTask={this.removeTask} />
       </div>
     );
   }
