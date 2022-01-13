@@ -10,28 +10,34 @@ class App extends React.Component {
         text: '',
         id: uniqid(),
         editState: false,
+        placeHolderForEdit: '',
       },
       tasks: [],
     };
   }
 
-  // how does handleTaskChange and onSubmitTask interact?
-  handleTaskChange = (e) =>
+  // this handles every keystroke, prior to the submit
+  handleTaskCreateInputChange = (e) =>
     this.setState({
       task: {
         text: e.target.value,
         id: this.state.task.id,
         editState: this.state.task.editState,
+        placeHolderForEdit: '',
       },
     });
 
-  // how does handleTaskChange and onSubmitTask interact?
-  // is it possible to combine them?
+  // this handles the form submit
   onSubmitTask = (e) => {
     e.preventDefault();
     this.setState({
       tasks: this.state.tasks.concat(this.state.task),
-      task: { text: '', id: uniqid(), editState: false },
+      task: {
+        text: '',
+        id: uniqid(),
+        editState: false,
+        placeHolderForEdit: '',
+      },
     });
   };
 
@@ -42,14 +48,46 @@ class App extends React.Component {
   };
 
   changeEditState = (taskid) => {
-    console.log(taskid);
+    this.closeOtherOpenEdits();
     this.setState((prevState) => ({
-      tasks: prevState.tasks.map((el) =>
-        el.id === taskid ? { ...el, editState: !el.editState } : el,
+      tasks: prevState.tasks.map((task) =>
+        task.id === taskid ? { ...task, editState: !task.editState } : task,
       ),
     }));
+  };
 
-    // this.setState({ task: this.state.tasks.find(taskToChange) });
+  handleInputFromTaskEdit = (e, taskid, placeHolderForEdit) => {
+    this.setState((prevState) => ({
+      tasks: prevState.tasks.map((task) =>
+        task.id === taskid
+          ? { ...task, placeHolderForEdit: e.target.value }
+          : task,
+      ),
+    }));
+  };
+
+  handleEditSubmit = (e, taskid) => {
+    e.preventDefault();
+    this.setState((prevState) => ({
+      tasks: prevState.tasks.map((task) =>
+        task.id === taskid
+          ? {
+              ...task,
+              text: task.placeHolderForEdit,
+              placeHolderForEdit: '',
+              editState: false,
+            }
+          : task,
+      ),
+    }));
+  };
+
+  closeOtherOpenEdits = () => {
+    this.setState((prevState) => ({
+      tasks: prevState.tasks.map((task) =>
+        task.editState === true ? { ...task, editState: false } : task,
+      ),
+    }));
   };
 
   render() {
@@ -59,7 +97,7 @@ class App extends React.Component {
         <form onSubmit={this.onSubmitTask}>
           <label htmlFor="taskInput">Enter task</label>
           <input
-            onChange={this.handleTaskChange}
+            onChange={this.handleTaskCreateInputChange}
             value={task.text}
             type="text"
             id="taskInput"
@@ -70,6 +108,8 @@ class App extends React.Component {
           tasks={tasks}
           removeTask={this.removeTask}
           changeEditState={this.changeEditState}
+          handleEditSubmit={this.handleEditSubmit}
+          handleInputFromTaskEdit={this.handleInputFromTaskEdit}
         />
       </div>
     );

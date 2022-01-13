@@ -1,7 +1,13 @@
 import React from 'react';
 
 const Overview = (props) => {
-  const { tasks, removeTask, changeEditState } = props;
+  const {
+    tasks,
+    removeTask,
+    changeEditState,
+    handleEditSubmit,
+    handleInputFromTaskEdit,
+  } = props;
 
   const renderBasedOnState = (state, task) => {
     if (!state) {
@@ -16,11 +22,19 @@ const Overview = (props) => {
     if (state) {
       return (
         <div>
-          <form>
-            <input></input>
+          <form onSubmit={(e) => handleEditSubmit(e, task.id)}>
+            <input
+              value={task.placeHolderForEdit}
+              type="text"
+              onChange={(e) =>
+                handleInputFromTaskEdit(e, task.id, task.placeHolderForEdit)
+              }
+            ></input>
             <div>
-              <button>submit</button>
-              <button onClick={() => changeEditState(task.id)}>cancel</button>
+              <button type="submit">submit</button>
+              <button type="cancel" onClick={() => changeEditState(task.id)}>
+                cancel
+              </button>
             </div>
           </form>
         </div>
@@ -31,7 +45,6 @@ const Overview = (props) => {
   return (
     <ul>
       {tasks.map((task) => {
-        console.log(task);
         return (
           <li className="taskli" key={task.id}>
             <div>[index {tasks.indexOf(task) + 1}]</div>
