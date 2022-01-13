@@ -56,7 +56,7 @@ class App extends React.Component {
     }));
   };
 
-  handleInputFromTaskEdit = (e, taskid, placeHolderForEdit) => {
+  handleInputFromTaskEdit = (e, taskid) => {
     this.setState((prevState) => ({
       tasks: prevState.tasks.map((task) =>
         task.id === taskid

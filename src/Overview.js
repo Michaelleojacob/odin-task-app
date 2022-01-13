@@ -26,9 +26,7 @@ const Overview = (props) => {
             <input
               value={task.placeHolderForEdit}
               type="text"
-              onChange={(e) =>
-                handleInputFromTaskEdit(e, task.id, task.placeHolderForEdit)
-              }
+              onChange={(e) => handleInputFromTaskEdit(e, task.id)}
             ></input>
             <div>
               <button type="submit">submit</button>
