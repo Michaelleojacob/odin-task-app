@@ -5,10 +5,26 @@ const Overview = (props) => {
 
   const renderBasedOnState = (state, task) => {
     if (!state) {
-      return <div>{task.text}</div>;
+      return (
+        <div>
+          <div>{task.text}</div>
+          <button onClick={() => changeEditState(task.id)}>edit</button>
+          <button onClick={() => removeTask(task.id)}>delete</button>
+        </div>
+      );
     }
     if (state) {
-      return <input></input>;
+      return (
+        <div>
+          <form>
+            <input></input>
+            <div>
+              <button>submit</button>
+              <button onClick={() => changeEditState(task.id)}>cancel</button>
+            </div>
+          </form>
+        </div>
+      );
     }
   };
 
@@ -20,9 +36,6 @@ const Overview = (props) => {
           <li className="taskli" key={task.id}>
             <div>[index {tasks.indexOf(task) + 1}]</div>
             {renderBasedOnState(task.editState, task)}
-            {/* <div>{task.text}</div> */}
-            <button onClick={() => changeEditState(task.id)}>edit</button>
-            <button onClick={() => removeTask(task.id)}>delete</button>
           </li>
         );
       })}
